@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hextris - 六边形方块游戏</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="auth-container" class="container">
+        <div class="auth-box">
+            <h1>Hextris</h1>
+            <div id="login-form" class="auth-form">
+                <h2>登录</h2>
+                <input type="email" id="login-email" placeholder="邮箱地址" required>
+                <input type="password" id="login-password" placeholder="密码" required>
+                <button id="login-btn">登录</button>
+                <p>还没有账户？ <a href="#" id="show-register">立即注册</a></p>
+            </div>
+            <div id="register-form" class="auth-form hidden">
+                <h2>注册</h2>
+                <input type="email" id="register-email" placeholder="邮箱地址" required>
+                <input type="password" id="register-password" placeholder="密码 (至少6位)" required>
+                <input type="password" id="register-confirm" placeholder="确认密码" required>
+                <button id="register-btn">注册</button>
+                <p>已有账户？ <a href="#" id="show-login">返回登录</a></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="game-container" class="container hidden">
+        <div class="header">
+            <div class="user-info">
+                <span id="user-email"></span>
+                <button id="logout-btn">登出</button>
+            </div>
+            <div class="score-container">
+                <div class="score-item">
+                    <span class="label">当前分数:</span>
+                    <span id="current-score">0</span>
+                </div>
+                <div class="score-item">
+                    <span class="label">最高分:</span>
+                    <span id="high-score">0</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="game-area">
+            <canvas id="game-canvas"></canvas>
+            <div id="game-over" class="overlay hidden">
+                <div class="message-box">
+                    <h2>游戏结束!</h2>
+                    <p>分数: <span id="final-score">0</span></p>
+                    <button id="restart-btn">重新开始</button>
+                    <button id="analyze-btn">AI分析</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="side-panel">
+            <div class="leaderboard">
+                <h3>今日排行榜</h3>
+                <div id="leaderboard-list" class="leaderboard-list">
+                    <p class="loading">加载中...</p>
+                </div>
+            </div>
+
+            <div id="ai-analysis" class="ai-panel hidden">
+                <h3>AI游戏分析</h3>
+                <div id="analysis-content" class="analysis-content">
+                    <p class="loading">分析中...</p>
+                </div>
+                <button id="close-analysis">关闭</button>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button id="start-btn">开始游戏</button>
+            <div class="instructions">
+                <p>使用 ← → 键旋转六边形</p>
+                <p>让相同颜色的方块连成一线即可消除</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    
+    <!-- Game Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/leaderboard.js"></script>
+    <script src="js/ai-analysis.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
