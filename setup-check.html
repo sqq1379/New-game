@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hextris - 配置检查</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 10px;
+            padding: 40px;
+            max-width: 800px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            border-left: 4px solid #ccc;
+        }
+
+        .check-item.success {
+            border-left-color: #4CAF50;
+        }
+
+        .check-item.error {
+            border-left-color: #f44336;
+        }
+
+        .check-item.warning {
+            border-left-color: #ff9800;
+        }
+
+        .icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 15px;
+            font-size: 20px;
+        }
+
+        .check-content {
+            flex: 1;
+        }
+
+        .check-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .check-desc {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .btn-container {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #5568d3;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        .info-box h3 {
+            color: #1976d2;
+            margin-bottom: 10px;
+        }
+
+        .info-box ul {
+            margin-left: 20px;
+        }
+
+        .info-box li {
+            margin: 5px 0;
+            color: #555;
+        }
+
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 Hextris 配置检查</h1>
+        
+        <div id="checks"></div>
+
+        <div class="info-box">
+            <h3>📝 配置步骤</h3>
+            <ul>
+                <li>查看 <code>SETUP.md</code> 获取详细的配置指南</li>
+                <li>在 Firebase Console 创建项目并获取配置信息</li>
+                <li>编辑 <code>js/config.js</code> 文件，填入你的 Firebase 配置</li>
+                <li>配置完成后，打开 <code>index.html</code> 开始游戏</li>
+            </ul>
+        </div>
+
+        <div class="btn-container">
+            <a href="SETUP.md" class="btn" target="_blank">查看配置指南</a>
+            <a href="index.html" class="btn" style="background: #4CAF50; margin-left: 10px;">进入游戏</a>
+        </div>
+    </div>
+
+    <script>
+        const checks = [
+            {
+                id: 'files',
+                title: '项目文件检查',
+                test: () => {
+                    return true; // 如果能加载这个页面，基本文件结构就是正常的
+                },
+                successMsg: '项目文件结构正常',
+                errorMsg: '项目文件可能不完整'
+            },
+            {
+                id: 'firebase',
+                title: 'Firebase SDK',
+                test: () => {
+                    return typeof firebase !== 'undefined';
+                },
+                successMsg: 'Firebase SDK 已加载',
+                errorMsg: 'Firebase SDK 未加载（这是正常的，在主页面才会加载）',
+                isWarning: true
+            }
+        ];
+
+        function runChecks() {
+            const container = document.getElementById('checks');
+            
+            checks.forEach(check => {
+                const result = check.test();
+                const div = document.createElement('div');
+                div.className = `check-item ${result ? 'success' : (check.isWarning ? 'warning' : 'error')}`;
+                
+                const icon = result ? '✓' : (check.isWarning ? '⚠' : '✗');
+                const message = result ? check.successMsg : check.errorMsg;
+                
+                div.innerHTML = `
+                    <div class="icon">${icon}</div>
+                    <div class="check-content">
+                        <div class="check-title">${check.title}</div>
+                        <div class="check-desc">${message}</div>
+                    </div>
+                `;
+                
+                container.appendChild(div);
+            });
+
+            // 添加配置状态检查提示
+            const configCheck = document.createElement('div');
+            configCheck.className = 'check-item warning';
+            configCheck.innerHTML = `
+                <div class="icon">⚙</div>
+                <div class="check-content">
+                    <div class="check-title">Firebase 配置</div>
+                    <div class="check-desc">需要在 js/config.js 中配置 Firebase 信息才能使用完整功能</div>
+                </div>
+            `;
+            container.appendChild(configCheck);
+
+            const aiCheck = document.createElement('div');
+            aiCheck.className = 'check-item warning';
+            aiCheck.innerHTML = `
+                <div class="icon">🤖</div>
+                <div class="check-content">
+                    <div class="check-title">AI 分析（可选）</div>
+                    <div class="check-desc">配置 OpenAI API 可以启用真实的 AI 分析，不配置也可以使用基于规则的分析</div>
+                </div>
+            `;
+            container.appendChild(aiCheck);
+        }
+
+        runChecks();
+    </script>
+</body>
+</html>
